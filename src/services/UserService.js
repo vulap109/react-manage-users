@@ -16,4 +16,8 @@ const deleteUser = (id) => {
     return axios.delete(`/api/users/${id}`);
 }
 
-export { fetchUsers, addUser, editUser, deleteUser };
+const loginUser = (data) => {
+    return axios.post('/api/login', data);
+}
+
+export { fetchUsers, addUser, editUser, deleteUser, loginUser };

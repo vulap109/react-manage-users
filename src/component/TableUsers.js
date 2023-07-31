@@ -92,8 +92,8 @@ const TableUsers = (props) => {
                     break;
 
                 case "asc":
-                    setSortBy("asc");
-                    setIdSortIcon("fa-solid fa-sort-up");
+                    setSortBy("desc");
+                    setIdSortIcon("fa-solid fa-sort-down");
                     listUsersTmp = _.orderBy(listUsersTmp, [field], ['desc']);
                     setListUsers(listUsersTmp);
                     break;
