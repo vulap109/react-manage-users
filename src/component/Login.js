@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { toast, ToastContainer } from 'react-toastify';
 import "../login.scss"
 import { loginUser } from "../services/UserService";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -23,6 +23,7 @@ const Login = () => {
     let res = await loginUser({ email: email, password: password });
     if (res && res.token) {
       localStorage.setItem("token", res.token);
+      localStorage.setItem("email", email);
       navigate("/");
     } else {
       if (res && res.status === 400) {
@@ -55,6 +56,10 @@ const Login = () => {
               {loading && <i className="fa-solid fa-sync fa-spin px-2"></i>}
               Log in
             </button>
+          </div>
+          <div className="text-center mt-4 ">
+            <i className="fa-solid fa-angles-left"></i>
+            <Link to="/" className="text-decoration-none text-black ms-1">Go back</Link>
           </div>
         </div>
       </div>

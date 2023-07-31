@@ -6,13 +6,11 @@ import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from './component/Home';
 import Header from './component/Header';
 import Login from './component/Login';
+import PrivateRoute from './routes/PrivateRoute';
 
 const router = createBrowserRouter([
   {
@@ -20,8 +18,13 @@ const router = createBrowserRouter([
     element: <Header />,
     children: [
       {
-        path: "users",
-        element: <App />,
+        element: <PrivateRoute />,
+        children: [
+          {
+            path: "users",
+            element: <App />,
+          },
+        ]
       },
       {
         index: true,
