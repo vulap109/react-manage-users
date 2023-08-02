@@ -1,36 +1,28 @@
 import { useEffect, useState } from "react";
-import { toast, ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import "../login.scss"
-import { loginUser } from "../services/UserService";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { userActionLogin } from "../redux/actions/userAction";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const isLoading = useSelector(state => state.user.isLoading);
+  const userState = useSelector(state => state.user.userState);
 
-  const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
+    if (userState && userState.auth) {
       navigate("/");
     }
-  });
+  }, [userState]);
 
   const handleLogin = async () => {
-    setLoading(true);
-    let res = await loginUser({ email: email, password: password });
-    if (res && res.token) {
-      localStorage.setItem("token", res.token);
-      localStorage.setItem("email", email);
-      navigate("/");
-    } else {
-      if (res && res.status === 400) {
-        toast.error(res.data.error);
-      }
-    }
-    setLoading(false);
+    dispatch(userActionLogin(email, password));
   }
   // console.log(">>> check state email: ", email);
   return (
@@ -50,10 +42,10 @@ const Login = () => {
           </div>
           <div className="d-flex justify-content-center">
             <button type="submit" className="btn btn-danger w-50"
-              disabled={!(email && password) || (email && password && loading) ? true : false}
+              disabled={!(email && password) || (email && password && isLoading) ? true : false}
               onClick={handleLogin}
             >
-              {loading && <i className="fa-solid fa-sync fa-spin px-2"></i>}
+              {isLoading && <i className="fa-solid fa-sync fa-spin px-2"></i>}
               Log in
             </button>
           </div>
