@@ -1,8 +1,8 @@
-import { USER_LOGIN, USER_LOGIN_ERROR, USER_LOGIN_SUCCESS } from "../actions/userAction";
+import { USER_LOGIN, USER_LOGIN_ERROR, USER_LOGIN_SUCCESS, USER_LOGOUT, USER_REFRESH } from "../actions/userAction";
 const INITIAL_STATE = {
     userState: {
         email: "",
-        auth: false,
+        auth: null,
         token: ""
     },
     isLoading: false,
@@ -38,6 +38,26 @@ const userReducer = (state = INITIAL_STATE, action) => {
                 },
                 isLoading: false,
                 isLoginError: true
+            }
+        case USER_LOGOUT:
+            return {
+                ...state,
+                userState: {
+                    email: "",
+                    token: "",
+                    auth: false
+                },
+                isLoading: false,
+                isLoginError: false
+            }
+        case USER_REFRESH:
+            return {
+                ...state,
+                userState: {
+                    email: action.payload.email,
+                    token: action.payload.token,
+                    auth: true
+                },
             }
 
         default:

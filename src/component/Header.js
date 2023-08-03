@@ -1,24 +1,32 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Container, Navbar } from "react-bootstrap";
 import { Nav } from "react-bootstrap";
 import { NavDropdown } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate, Outlet } from "react-router-dom";
+import { userActionLogout, userActionRefresh } from "../redux/actions/userAction";
+import { ToastContainer, toast } from "react-toastify";
 
 
 const Header = (props) => {
     const navigate = useNavigate();
-    const [emailLogin, setEmailLogin] = useState("");
+    const user = useSelector(state => state.user.userState);
+    const dispatch = useDispatch();
+    const emailUser = localStorage.getItem("email");
+    const tokenUser = localStorage.getItem("token");
 
     useEffect(() => {
-        const emailLog = localStorage.getItem("email");
-        setEmailLogin(emailLog);
-    }, [])
+        if (user && user.auth === false) {
+            navigate("/");
+            toast.success("Log out success!");
+        }
+        if (localStorage.getItem("token") && !user.token) {
+            dispatch(userActionRefresh(emailUser, tokenUser))
+        }
+    }, [user, navigate])
 
     const handleLogout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("email");
-        setEmailLogin("");
-        navigate("/");
+        dispatch(userActionLogout());
     }
     return (
         <>
@@ -32,8 +40,8 @@ const Header = (props) => {
                             <NavLink to="/users" className={"nav-link"}>Manage users</NavLink>
                         </Nav>
                         <Nav>
-                            <NavDropdown title={emailLogin ? `Wellcome ${emailLogin}` : "Account"} id="basic-nav-dropdown">
-                                {!emailLogin ?
+                            <NavDropdown title={user.email ? `Wellcome ${user.email}` : "Account"} id="basic-nav-dropdown">
+                                {!user.email ?
                                     <NavLink to="/login" className={"dropdown-item"}>Login</NavLink>
                                     :
                                     <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
@@ -45,6 +53,16 @@ const Header = (props) => {
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
+            <ToastContainer
+                position="top-right"
+                autoClose={4000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                draggable
+                theme="light"
+            />
             <Outlet />
         </>
     )

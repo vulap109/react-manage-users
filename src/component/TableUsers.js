@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import { fetchUsers } from "../services/UserService";
 import ReactPaginate from 'react-paginate';
-import { ToastContainer } from 'react-toastify';
 import ModalAddUser from "./ModalAddUser";
 import _ from "lodash";
 
@@ -214,16 +213,6 @@ const TableUsers = (props) => {
                 breakLinkClassName="page-link"
                 containerClassName="pagination justify-content-center"
                 activeClassName="active"
-            />
-            <ToastContainer
-                position="top-right"
-                autoClose={4000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                draggable
-                theme="light"
             />
             <ModalAddUser
                 modalAction={modalAction}
